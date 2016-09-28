@@ -839,7 +839,6 @@
 						},
 					})
 					.each(function(d) {
-
 						d3.select(this)
 							.append("circle")
 							.attr("r", function(d) {
@@ -1452,10 +1451,14 @@
 				$toggleGravity.find("a").on('click', function() {
 					$toggleGravity.toggleClass('active');
 					var active = $toggleGravity.hasClass('active');
-					if (!active)
-						force.gravity(0);
-					else
-						force.gravity(0.1);
+					// if (!active)
+					// 	force.gravity(0);
+					// else
+					// 	force.gravity(0.1);
+					root.nodes.forEach(function(d) {
+						if (d.isDraggable)
+							d.fixed = !active;
+					});
 					renderData();
 				});
 
@@ -1476,7 +1479,8 @@
 					return el.score
 				})).toFixed(3));
 				
-				var minTemp = (scoreRange.min + scoreRange.max * 0.2).toFixed(3);
+				var minTemp = (scoreRange.min + scoreRange.max/100*25).toFixed(3);
+				var maxTemp = (scoreRange.max/100*75).toFixed(3);
 				
 				$('.starting-point', $filter).text(minTemp);
 				$('.ending-point', $filter).text(scoreRange.max);
@@ -1491,7 +1495,7 @@
 					tooltip: false,
 					enabled: true,
 					range: true,
-					value: [parseFloat(minTemp), scoreRange.max]
+					value: [parseFloat(minTemp), parseFloat(maxTemp)]
 				}).on('slide', function(evt) {
 					collapseNodesByScore(evt.value);
 					$('.starting-point', $filter).text(evt.value[0]);
