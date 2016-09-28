@@ -202,15 +202,18 @@
 		background-color: #171616;
 	}
 
-	#pop-up-functions .dropdown-toggle.btn-default {
+	#pop-up-functions .dropdown-toggle.btn-default,
+	#pop-up-functions .dropdown-menu li label {
 		color: #FFDE00;
 	}
 
-	#pop-up-inputs .dropdown-toggle.btn-default {
+	#pop-up-inputs .dropdown-toggle.btn-default,
+	#pop-up-inputs .dropdown-menu li label {
 		color: #03A9F4;
 	}
 
-	#pop-up-others .dropdown-toggle.btn-default {
+	#pop-up-others .dropdown-toggle.btn-default,
+	#pop-up-others .dropdown-menu li label {
 		color: #7ED321;
 	}
 
@@ -937,7 +940,11 @@
 					})
 					.on('mouseleave', tip.hide);
 
-				dragCallback = dragCallback || node.property('__onmousedown.drag')['_'];
+				try {
+					dragCallback = dragCallback || node.property('__onmousedown.drag')['_'];
+				} catch(ex) {
+					console.debug(ex);
+				}
 
 				tick = function() {
 					link.select(".link-line").attr("d", attrD);
@@ -1538,6 +1545,21 @@
 			template: '<div class="tooltip dark-dropdown-tooltip"><div class="tooltip-inner"></div></div>',
 			title: function() {
 				return $(this).find('input').val();
+			}
+		});
+
+		// Set color of filter nodes and nodes groups
+		root.nodes.forEach(function(d) {
+			if( $('label.checkbox input[value="'+d.name.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'"]') ) {
+				var checkbox = $('label.checkbox input[value="'+d.name.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'"]')[0];
+					label = $(checkbox).parent('label.checkbox')[0],
+					optgroup = $(label).closest('li').prev('li.multiselect-group');
+
+				if( d.hasOwnProperty('color') && d.color.length != 0 ) {
+					if( optgroup.length != 0 )
+						$(optgroup[0]).find('label').css('color', d.color);
+					$(label).css('color', d.color);
+				}
 			}
 		});
 	});
