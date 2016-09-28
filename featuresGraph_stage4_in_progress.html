@@ -1076,17 +1076,22 @@
 				var inNodes = $("#input_nodes");
 				var funNodes = $("#function_nodes");
 				// var otherNodes = $("#other_nodes");
-				var otherNodes = [];
+				var otherNodes = [],
+					otherNodesNames = [];
 
 				for (k = 0; k < root.nodes.length; k++) {
 					var nodeLabel = (root.nodes[k].hasOwnProperty('title') ? root.nodes[k].title : root.nodes[k].name);
 
 					switch (root.nodes[k].groupName) {
 						case 'Input':
-							inNodes.append("<option value='" + root.nodes[k].name + "'>" + nodeLabel + "</option>");
+							// Don't append filter option, if there is already present such name
+							if( $('#input_nodes option[value="'+root.nodes[k].name.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'"]').length == 0 )
+								inNodes.append("<option value='" + root.nodes[k].name + "'>" + nodeLabel + "</option>");
 							break;
 						case 'Function':
-							funNodes.append("<option value='" + root.nodes[k].name + "'>" + nodeLabel + "</option>");
+							// Don't append filter option, if there is already present such name
+							if( $('#function_nodes option[value="'+root.nodes[k].name.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'"]').length == 0 )
+								funNodes.append("<option value='" + root.nodes[k].name + "'>" + nodeLabel + "</option>");
 							break;
 						default:
 							// otherNodes.append("<option value='" + root.nodes[k].name + "'>" + root.nodes[k].name + "</option>");
@@ -1108,11 +1113,14 @@
 									index = otherNodes.length - 1;
 								}
 
-								otherNodes[index].children.push({
-									label: nodeLabel,
-									value: root.nodes[k].name,
-									group: root.nodes[k].groupName
-								});
+								if( otherNodesNames.indexOf( root.nodes[k].name == -1 ) ) {
+									otherNodesNames.push(root.nodes[k].name);
+									otherNodes[index].children.push({
+										label: nodeLabel,
+										value: root.nodes[k].name,
+										group: root.nodes[k].groupName
+									});
+								}
 							} catch (e) {
 								console.warn(e, "Browser doen't support method 'find', use loop methods for Other filter nodes;");
 								var index = -1;
@@ -1133,10 +1141,14 @@
 									index = otherNodes.length - 1;
 								}
 
-								otherNodes[index].children.push({
-									label: root.nodes[k].name,
-									value: root.nodes[k].name
-								});
+								if( otherNodesNames.indexOf( root.nodes[k].name == -1 ) ) {
+									otherNodesNames.push(root.nodes[k].name);
+									otherNodes[index].children.push({
+										label: nodeLabel,
+										value: root.nodes[k].name,
+										group: root.nodes[k].groupName
+									});
+								}
 							}
 					}
 				}
@@ -1149,6 +1161,7 @@
 					nonSelectedText: 'Input (0)',
 					filterPlaceholder: 'Search by node name...',
 					filterBehavior: 'value',
+					maxHeight: (height/100)*80,
 					buttonText: function(options, select) {
 						var selected = options.length,
 							total = $('#input_nodes').children('option').length;
@@ -1196,6 +1209,7 @@
 					nonSelectedText: 'Function (0)',
 					filterPlaceholder: 'Search by func name...',
 					filterBehavior: 'value',
+					maxHeight: (height/100)*80,
 					buttonText: function(options, select) {
 						var selected = options.length,
 							total = $('#function_nodes').children('option').length;
@@ -1247,6 +1261,7 @@
 					enableCollapsibleOptGroups: true,
 					filterPlaceholder: 'Search by const name...',
 					filterBehavior: 'value',
+					maxHeight: (height/100)*80,
 					buttonText: function(options, select) {
 						var selected = options.length,
 							total = $('#other_nodes').find('option').length,
