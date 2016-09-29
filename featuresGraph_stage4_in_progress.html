@@ -1090,12 +1090,12 @@
 					switch (root.nodes[k].groupName) {
 						case 'Input':
 							// Don't append filter option, if there is already present such name
-							if( $('#input_nodes option[value="'+root.nodes[k].name.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'"]').length == 0 )
+							if( $('#input_nodes option:contains("'+root.nodes[k].title.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'")').length == 0 )
 								inNodes.append("<option value='" + root.nodes[k].name + "'>" + nodeLabel + "</option>");
 							break;
 						case 'Function':
 							// Don't append filter option, if there is already present such name
-							if( $('#function_nodes option[value="'+root.nodes[k].name.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'"]').length == 0 )
+							if( $('#function_nodes option:contains("'+root.nodes[k].title.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')+'")').length == 0 )
 								funNodes.append("<option value='" + root.nodes[k].name + "'>" + nodeLabel + "</option>");
 							break;
 						default:
@@ -1118,8 +1118,8 @@
 									index = otherNodes.length - 1;
 								}
 
-								if( otherNodesNames.indexOf( root.nodes[k].name == -1 ) ) {
-									otherNodesNames.push(root.nodes[k].name);
+								if( otherNodesNames.indexOf( root.nodes[k].title ) == -1 ) {
+									otherNodesNames.push(root.nodes[k].title);
 									otherNodes[index].children.push({
 										label: nodeLabel,
 										value: root.nodes[k].name,
@@ -1146,8 +1146,8 @@
 									index = otherNodes.length - 1;
 								}
 
-								if( otherNodesNames.indexOf( root.nodes[k].name == -1 ) ) {
-									otherNodesNames.push(root.nodes[k].name);
+								if( otherNodesNames.indexOf( root.nodes[k].title ) == -1 ) {
+									otherNodesNames.push(root.nodes[k].title);
 									otherNodes[index].children.push({
 										label: nodeLabel,
 										value: root.nodes[k].name,
