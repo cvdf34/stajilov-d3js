@@ -1548,7 +1548,11 @@
 					tooltip_position: 'bottom',
 					enabled: true,
 					range: true,
-					value: [parseFloat(minTemp), parseFloat(maxTemp)]
+					value: [parseFloat(minTemp), parseFloat(maxTemp)],
+					formatter: function(value) {
+						if( value.length > 1 )
+							return value[0] + " - " + value[1];
+					}
 				}).on('slide', function(evt) {
 					collapseNodesByScore(evt.value);
 					$('.starting-point', $filter).text(evt.value[0]);
