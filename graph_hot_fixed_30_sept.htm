@@ -204,6 +204,24 @@
 		background-color: #171616;
 	}
 
+	.navbar-dropdown .multiselect-group.collapsed .caret {
+		border-bottom: 0;
+		border-top: 8px dashed;
+    	border-top: 8px solid\9;
+		border-right: 8px solid transparent;
+		border-left: 8px solid transparent;
+	}
+
+	.navbar-dropdown .btn-group.open .btn .caret,
+	.navbar-dropdown .multiselect-group .caret {
+		margin-top: -4px;
+		border-top: 0;
+		border-bottom: 8px dashed;
+    	border-bottom: 8px solid\9;
+		border-right: 8px solid transparent;
+		border-left: 8px solid transparent;
+	}
+
 	#pop-up-functions .dropdown-toggle.btn-default,
 	#pop-up-functions .dropdown-menu li label {
 		color: #FFDE00;
@@ -1201,7 +1219,6 @@
 								return "Input (" + selected + "/" + total + ")";
 						}
 					},
-
 					onChange: function(option, checked) {
 						var collapse = checked ? "out" : "in"
 						collapseNode(root.nodes.filter(function(d) {
@@ -1408,32 +1425,26 @@
 				$btnContainer.append($("#pop-up-others"));
 
 				//Extract input color
-				var inputFilterName = document.getElementById('pop-up-inputs').getElementsByTagName('span')[0].getElementsByTagName('span')[0];
-				console.log(inputFilterName);
-
 				var inputNodes = root.nodes.filter(function (n) {
 					return n.groupName === "Input";
 				});
-				inputFilterName.style.color = inputNodes[0].color;
+				$('#pop-up-inputs .multiselect-selected-text').css('color', inputNodes[0].color);
+				$('#pop-up-inputs .caret').css('color', inputNodes[0].color);
+
 
 				//Extract function color
-				var functionFilterName = document.getElementById('pop-up-functions').getElementsByTagName('span')[0].getElementsByTagName('span')[0];
-				console.log(inputFilterName);
-
 				var functionNodes = root.nodes.filter(function (n) {
 					return n.groupName === "Function";
 				});
-				functionFilterName.style.color = functionNodes[0].color;
+				$('#pop-up-functions .multiselect-selected-text').css('color', functionNodes[0].color);
+				$('#pop-up-functions .caret').css('color', functionNodes[0].color);
 
 				//Extract other color
-				var otherFilterName = document.getElementById('pop-up-others').getElementsByTagName('span')[0].getElementsByTagName('span')[0];
-				console.log(inputFilterName);
-
 				var otherNodes = root.nodes.filter(function (n) {
 					return (n.groupName != "Function" && n.groupName != "Input");
 				});
-				otherFilterName.style.color = otherNodes[0].color;
-
+				$('#pop-up-others .dropdown-toggle .multiselect-selected-text').css('color', otherNodes[0].color);
+				$('#pop-up-others .dropdown-toggle .caret').css('color', otherNodes[0].color);
 
 
 
@@ -1619,11 +1630,23 @@
 					optgroup = $(label).closest('li').prev('li.multiselect-group');
 
 				if( d.hasOwnProperty('color') && d.color.length != 0 ) {
-					if( optgroup.length != 0 )
+					if( optgroup.length != 0 ) {
 						$(optgroup[0]).find('label').css('color', d.color);
+						$(optgroup[0]).find('.caret').css('color', d.color);
+					}
+
 					$(label).css('color', d.color);
 				}
 			}
+		});
+
+		// Set correct status for opened/collapsed opt groups at the Filter DropDown list
+		$('.multiselect-group .caret').click(function(e) {
+			var collapsed = !$(e.target).parents('.multiselect-group').next('li').hasClass('multiselect-collapsible-hidden');
+			if( collapsed )
+				$(e.target).parents('.multiselect-group').addClass('collapsed');
+			else
+				$(e.target).parents('.multiselect-group').removeClass('collapsed');
 		});
 	});
 
